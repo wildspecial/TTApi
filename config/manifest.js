@@ -73,7 +73,7 @@ const manifest = {
           ops: { interval: 60000 },
           reporters: {
             console: [
-              { module: 'good-squeeze', name: 'Squeeze', args: [{ error: '*' }] }, { module: 'good-console' }, 'stdout'
+              { module: 'good-squeeze', name: 'Squeeze', args: [{ log: '*', response: '*', error:'*',ops: '*'  }] }, { module: 'good-console' }, 'stdout'
             ],
 
           }

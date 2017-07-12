@@ -4,6 +4,7 @@ class TransactionManager {
 
   constructor(secInThePast) {
 
+
     this.historyDataSize = 0;
     this.tsCurrentOperation = 0;
     this.secInThePast = secInThePast;
@@ -112,26 +113,28 @@ class TransactionManager {
       InMemoryStats.data = this.calculateStats(InMemoryStats.data, this.hystoryData[second]);
     }
 
-   
-    
+
+
     let hrend = process.hrtime(hrstart);
     let dStop = new Date();
-    let diff = dStop.getTime()-dStart.getTime();
+    let diff = dStop.getTime() - dStart.getTime();
 
     this.helthLevel = hrend;
     InMemoryStats.data.hLevel1 = this.helthLevel;
     InMemoryStats.data.hLevel2 = diff;
 
 
-
-    console.log("history:");
-    console.log(this.hystoryData);
-    console.log("stats:");
-    console.log(InMemoryStats.data);
-    console.log("history size:" + this.historyDataSize);
-
-
-    console.log("ms:" + this.helthLevel);
+    /*
+        console.log("history:");
+        console.log(this.hystoryData);
+        console.log("stats:");
+        console.log(InMemoryStats.data);
+        console.log("history size:" + this.historyDataSize);
+     
+    
+    
+        console.log("ms:" + this.helthLevel);
+      */
 
   }
 
