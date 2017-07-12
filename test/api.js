@@ -1,8 +1,6 @@
 'use strict';
 
 const Hapi = require('hapi');
-const jwtPlugin = require('hapi-auth-jwt2');
-const authPlugin = require('../auth');
 const apiPlugin = require('../api');
 
 const Code = require('code');
@@ -19,7 +17,7 @@ describe('API', () => {
 
   before((done) => {
 
-    const plugins = [jwtPlugin, authPlugin, apiPlugin];
+    const plugins = [apiPlugin];
     server = new Hapi.Server();
     server.connection({ port: 8000 });
     server.register(plugins, (err) => {
@@ -33,7 +31,7 @@ describe('API', () => {
 
   });
 
-  it('Known route should return http status 200', done => {
+  it('Root should return http status 200', done => {
     server.inject('/', response => {
       expect(response.statusCode).to.equal(200);
       done();

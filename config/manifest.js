@@ -1,3 +1,5 @@
+const Pack = require('../package');
+
 const envKey = key => {
   const env = process.env.NODE_ENV || 'development';
 
@@ -38,7 +40,27 @@ const manifest = {
       plugin: 'hapi-auth-jwt2'
     },
     {
+      plugin: "inert"
+    },
+    {
+      plugin: "vision"
+    },
+    {
       plugin: './auth'
+    },
+    { plugin: 'inert' },
+    { plugin: 'vision' },
+    {
+      plugin: {
+        register: 'hapi-swagger',
+        options: {
+          info: { 
+            title: Pack.title,
+            description: Pack.description,
+            version: Pack.version
+          },
+        },
+      },
     },
     {
       plugin: './api',
@@ -52,7 +74,8 @@ const manifest = {
           reporters: {
             console: [
               { module: 'good-squeeze', name: 'Squeeze', args: [{ error: '*' }] }, { module: 'good-console' }, 'stdout'
-            ]
+            ],
+
           }
         }
       }

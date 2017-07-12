@@ -94,6 +94,7 @@ class TransactionManager {
     //InMemoryStats.data
 
     let hrstart = process.hrtime();
+    let dStart = new Date();
 
 
     this.tsLastSchedule = new Date();
@@ -105,14 +106,21 @@ class TransactionManager {
 
     InMemoryStats.data = Object.assign({}, InMemoryStats.emptyData);
     InMemoryStats.data.ts = this.tsLastSchedule;
+    InMemoryStats.data.historyDataSize = this.historyDataSize;
 
     for (var second in this.hystoryData) {
       InMemoryStats.data = this.calculateStats(InMemoryStats.data, this.hystoryData[second]);
     }
 
+   
+    
     let hrend = process.hrtime(hrstart);
+    let dStop = new Date();
+    let diff = dStop.getTime()-dStart.getTime();
 
     this.helthLevel = hrend;
+    InMemoryStats.data.hLevel1 = this.helthLevel;
+    InMemoryStats.data.hLevel2 = diff;
 
 
 
