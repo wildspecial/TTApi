@@ -1,4 +1,4 @@
-var InMemoryStats = require('../../model/InMemoryStats');
+var InMemoryStats = require('../../../model/InMemoryStats');
 
 class TransactionManager {
 
@@ -152,31 +152,7 @@ class TransactionManager {
 }
 
 
-
-
 var transactionMan = new TransactionManager(60);
 transactionMan.runUpdateScheduler();
+module.exports.man = transactionMan;
 
-console.log("passato");
-
-
-
-module.exports.transactions = {
-
-  //    this.res = { result: 'this is the transactions mod' };
-  handler: function (request, reply) {
-
-
-    if (transactionMan.helthLevel > transactionMan.helthLevelThreshold) {
-      return reply({ result: 'Too Many Requests for this Instance' }).code(429);
-    }
-
-
-    var injested = transactionMan.injestValue(request.payload);
-    if (injested) {
-      return reply().code(201); //inserted ok
-    } else {
-      return reply().code(204); //inserted ok. The transaction is older than 60 sec
-    }
-  }
-};

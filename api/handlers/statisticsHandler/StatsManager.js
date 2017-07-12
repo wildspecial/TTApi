@@ -1,4 +1,4 @@
-var InMemoryStats = require('../../model/InMemoryStats');
+var InMemoryStats = require('../../../model/InMemoryStats');
 
 class StatsManager {
 
@@ -16,15 +16,13 @@ class StatsManager {
     };
     return stats;
   }
+  static get statisticsVerbose() {
+    return InMemoryStats.data;
+  }
 
   set stats(stats) {
 
   }
 }
 
-
-module.exports.statistics = {
-  handler: function (request, reply) {
-    return reply(StatsManager.statistics).code(200);
-  }
-};
+module.exports.man = StatsManager;

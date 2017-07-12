@@ -1,6 +1,6 @@
 
-const Transactions = require('./handlers/transactions');
-const Statistics = require('./handlers/statistics');
+const TransactionsAPI = require('./handlers/transactionsHandler/TransactionsAPI');
+const StatisticsAPI = require('./handlers/statisticsHandler/StatisticsAPI');
 
 
 
@@ -9,8 +9,9 @@ exports.register = (plugin, options, next) => {
 
   plugin.route([
 
-    { method: 'POST', path: '/transactions', config: Transactions.transactions},
-    { method: 'GET', path: '/statistics', config: Statistics.statistics},
+    { method: 'POST', path: '/transactions', config: TransactionsAPI.transactions},
+    { method: 'GET', path: '/statistics', config: StatisticsAPI.statistics},
+    { method: 'GET', path: '/statistics-verbose', config: StatisticsAPI.statisticsVerbose},
 
   ]);
 
