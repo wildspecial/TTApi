@@ -1,5 +1,5 @@
 # TTApi
-Lean hapi API Boilerplate with an opinionated view on project structure.
+Simple Transaction APIs
 
 ## The Goal
 A simple HAPI & NODE for managing a bunch of trading operations in a high performance yet very simple node style way
