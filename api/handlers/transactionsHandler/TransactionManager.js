@@ -1,3 +1,18 @@
+/**
+ * Transaction Manager
+ *
+ * This module is responsible for receiving transaction and calculate avg , sum, count, min, max.
+ * The strategy here is to agregate every transaction coming with a valid timestamp (not older than 60 sec)
+ * for each second.
+ * There will be a list of objects hystoryData that will have all the aggregated data for every single second.
+ * Every time a transaction comes, the avg, sim, count, min, max are already calculated for that particular second.
+ * Then every second a schedule will fire and:
+ * Will cycle only (worst case 60 elements) from now to the 60 second behind, will calculate the aggregated data for 60 seconds only (not 
+ * for every transaction that has come, but for the specific second aggregations) and finally will remove seconds 
+ * older than 60s from the current timestamp.
+ * 
+ */
+
 var InMemoryStats = require('../../../model/InMemoryStats');
 
 class TransactionManager {
@@ -16,17 +31,28 @@ class TransactionManager {
 
   }
 
+  //the scheduler that is launch every second
   runUpdateScheduler() {
     setInterval(this.updateTransactionData.bind(this), 1000);
   }
 
+  //if the transaction is older than 60 sec is not valid
   checkIfValid(timestamp) {
     let isValid = (this.tsCurrentOperation - timestamp) / 1000 > this.secInThePast ? false : true;
     return isValid;
   }
 
+
+  /**
+   * 
+   * calculateStatsForThisSecond
+   * 
+   * based on the new coming transaction here there is a re-calulation of all stats data for this particolar second
+   *
+   */
+
   calculateStatsForThisSecond(statsForThisSecond, transaction) {
-    //based on the new coming transaction here there is a re-calulation of all stats data for this particolar second
+   
 
 
     statsForThisSecond.ts = new Date(this.tsCurrentOperation).setMilliseconds(0);
@@ -47,12 +73,13 @@ class TransactionManager {
     return statsForThisSecond;
   }
 
+
+
   calculateStats(stats, statsForThisSecond) {
-    //based on the new coming transaction here there is a re-calulation of all stats data for this particolar second
 
     if (stats.count > 0) {
       stats.sum += statsForThisSecond.sum;
-      stats.count++;
+      stats.count += statsForThisSecond.count;
       stats.avg = stats.sum / stats.count;
       stats.max = (statsForThisSecond.max > stats.max ? statsForThisSecond.max : stats.max);
       stats.min = (statsForThisSecond.min < stats.min ? statsForThisSecond.min : stats.min);
@@ -91,12 +118,32 @@ class TransactionManager {
     delete this.hystoryData[t.getTime()];
   }
 
+  //TODO - Bug fix. Sometimes the removeOldSecond doesn't remove a bunch of old second.
+  //Happed during high traffic test. Neet investegation. It's just a workaround.
+  flushData(timestamp) {
+    let isValid = (timestamp-this.tsCurrentOperation) / 1000 > this.secInThePast ? false : true;
+    if (this.historyDataSize > 0 && !isValid) {
+      InMemoryStats.data = Object.assign({}, InMemoryStats.emptyData);
+      InMemoryStats.data.ts = this.tsLastSchedule;
+    }
+  }
+
+
+  /**
+   * updateTransactionData
+   *  
+   * One of the core method. It removes from the history the old second not valid anymore,
+   * Cycles all the aggregated data for each second (not for each transaction) and finally calculates the
+   * final data
+   *
+   */
   updateTransactionData() {
     //InMemoryStats.data
 
     let hrstart = process.hrtime();
     let dStart = new Date();
 
+    this.flushData(dStart.getTime());
 
     this.tsLastSchedule = new Date();
     this.tsLastSchedule.setMilliseconds(0);
@@ -107,6 +154,7 @@ class TransactionManager {
 
     InMemoryStats.data = Object.assign({}, InMemoryStats.emptyData);
     InMemoryStats.data.ts = this.tsLastSchedule;
+    InMemoryStats.data.hystoryData = this.hystoryData;
     InMemoryStats.data.historyDataSize = this.historyDataSize;
 
     for (var second in this.hystoryData) {
@@ -123,18 +171,6 @@ class TransactionManager {
     InMemoryStats.data.hLevel1 = this.helthLevel;
     InMemoryStats.data.hLevel2 = diff;
 
-
-    /*
-        console.log("history:");
-        console.log(this.hystoryData);
-        console.log("stats:");
-        console.log(InMemoryStats.data);
-        console.log("history size:" + this.historyDataSize);
-     
-    
-    
-        console.log("ms:" + this.helthLevel);
-      */
 
   }
 
@@ -162,7 +198,7 @@ class TransactionManager {
 
 }
 
-
+//the transaction manager will work with an history 60 sec in the past.
 var transactionMan = new TransactionManager(60);
 transactionMan.runUpdateScheduler();
 module.exports.man = transactionMan;

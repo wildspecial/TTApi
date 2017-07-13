@@ -1,3 +1,12 @@
+/**
+ * TransactionAPI
+ *
+ * An HAPI/GLUE descriptor that defines the /transactions API with all  information such as
+ * handlers, route, status code, validation, auto swagger documentation.
+ * 
+ */
+
+
 const Joi = require('joi');
 var TS = require('./TransactionManager');
 
