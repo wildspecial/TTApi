@@ -45,6 +45,15 @@ $ npm test
 └── package.json
 ```
 
+
+## Performance Tests and Big O
+Since the strategy has to pre-calculate and aggregate the sum,avg,min,max,coung every time a transaction arrives for each
+seconds. At the end the scheduler that runs every second to remove the old seconds (older than 60) from the history
+will cycle at maximum 60 times a second.
+The statistics API will have a "ready to consume" object in memory to serve O(1). 
+In the graph the number of transactions per second increase and the response time remains constant O(1)
+[[https://github.com/wildspecial/TTApi/blob/master/perftests/RequestPerSec_vs_ResponseTime.jpg|alt=performance test]]
+
 ## License
 The MIT License (MIT)
 
