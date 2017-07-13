@@ -13,8 +13,8 @@ A simple HAPI & NODE for managing a bunch of trading operations in a high perfor
 
 Clone project and install dependencies:
 ```bash
-$ git clone https://github.com/rjmreis/hapi-api.git
-$ cd hapi-api
+$ git clone https://github.com/wildspecial/TTApi.git
+$ cd TTApi
 $ npm install
 ```
 
@@ -33,7 +33,7 @@ $ npm test
 .
 ├── api/
 |   ├── handlers/
-|   |   └── home.js   * Sample handler
+|   |   └── various   * Several handlers
 |   └── index.js      * REST routes
 ├── config/
 |   ├── manifest.js   * Server configuration
@@ -54,6 +54,18 @@ The statistics API will have a "ready to consume" object in memory to serve O(1)
 In the graph the number of transactions per second increase and the response time remains constant O(1)
 
 ![Alt text](https://github.com/wildspecial/TTApi/blob/master/perftests/RequestPerSec_vs_ResponseTime.jpg "Performance Test")
+
+
+
+## Documentation
+Thanks to hapi-swagger plugin, the app provides a auto swagger documentation. You can reach it under
+http://host:port/documentation
+and test on the fly the two APIs
+
+
+![Alt text](https://github.com/wildspecial/TTApi/blob/master/docs/Swagger.jpg "Swagger Doc")
+
+
 
 ## License
 The MIT License (MIT)
